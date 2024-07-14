@@ -1,0 +1,73 @@
+》》使用python编写程序，实现以下步骤：
+1.程序运行时在命令行输入内容
+2.导入“api”包，把输入的内容保存为text字符串并传入"api.search1()"函数
+3.在第2步调用"api.search1()"函数的输出内容中匹配连续的两个双引号。如果匹配到连续的两个双引号，获取双引号中用空格分割的数字，再次匹配到两个连续的双引号后结束获取，打印获取到的数字并在前面加上“传入的原文分段：”。如果没有匹配到连续的两个双引号，打印第2步调用"api.search1()"函数的输出内容并结束程序
+4.根据第3步获取的数字，在当前目录的chapter文件夹中获取文件名为对应数字的txt文件
+5.用utf-8编码依次打开第4步获取的txt文件，连接为content字符串。把content字符串和text字符串依次传入“api.search11()”函数（顺序为api.search11(content,text)）
+6.打印第5步调用api.search11()”函数的输出内容，结束程序
+
+
+》
+```python
+import re
+import os
+import sys
+
+# 模拟的api包
+class api:
+    @staticmethod
+    def search1(text):
+        # 模拟的search1函数，返回包含双引号的字符串
+        return f'This is a test "123 456" and another "789 1011"'
+
+    @staticmethod
+    def search11(content, text):
+        # 模拟的search11函数，返回处理后的字符串
+        return f'Processed content: {content}, text: {text}'
+
+def main():
+    # 1. 程序运行时在命令行输入内容
+    text = input("请输入内容: ")
+
+    # 2. 导入“api”包，把输入的内容保存为text字符串并传入"api.search1()"函数
+    search1_output = api.search1(text)
+
+    # 3. 在第2步调用"api.search1()"函数的输出内容中匹配连续的两个双引号
+    pattern = r'"([^"]*)"'
+    matches = re.findall(pattern, search1_output)
+
+    if matches:
+        # 获取双引号中用空格分割的数字
+        numbers = []
+        for match in matches:
+            numbers.extend(match.split())
+        print(f"传入的原文分段：{', '.join(numbers)}")
+    else:
+        print(search1_output)
+        return
+
+    # 4. 根据第3步获取的数字，在当前目录的chapter文件夹中获取文件名为对应数字的txt文件
+    chapter_folder = 'chapter'
+    files_to_read = []
+    for number in numbers:
+        file_path = os.path.join(chapter_folder, f'{number}.txt')
+        if os.path.exists(file_path):
+            files_to_read.append(file_path)
+
+    # 5. 用utf-8编码依次打开第4步获取的txt文件，连接为content字符串
+    content = ""
+    for file_path in files_to_read:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            content += file.read()
+
+    # 把content字符串和text字符串依次传入“api.search11()”函数
+    search11_output = api.search11(content, text)
+
+    # 6. 打印第5步调用api.search11()”函数的输出内容，结束程序
+    print(search11_output)
+
+if __name__ == "__main__":
+    main()
+```
+
+这个程序实现了你所描述的步骤。请注意，`api`包和`search1`、`search11`函数是模拟的，你需要根据实际情况替换为真实的API调用。同时，确保在运行程序时，当前目录下有一个名为`chapter`的文件夹，并且该文件夹中包含以数字命名的txt文件。

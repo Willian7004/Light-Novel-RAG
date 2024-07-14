@@ -1,0 +1,87 @@
+》》使用python编写程序，实现以下步骤：
+1.程序运行时在命令行输入内容
+2.导入“api”包，把输入的内容保存为text字符串并传入"api.search2()"函数
+3.在第2步调用"api.search2()"函数的输出内容中匹配连续的两个双引号，如果匹配到连续的两个双引号，获取双引号中用空格分割的数字，再次匹配到两个连续的双引号后结束获取，打印获取到的数字并在前面加上“传入的概括分段：”。如果没有匹配到连续的两个双引号，打印第2步调用"api.search2()"函数的输出内容并结束程序
+4.根据第3步获取的数字，在当前目录的chapter2文件夹中获取文件名为对应数字的txt文件
+5.用utf-8编码依次打开第4步获取的txt文件，连接为content字符串。把content字符串和text字符串依次传入“api.search22()”函数（顺序为api.search22(content,text)）
+6.在第5步调用“api.search22()”函数的输出内容中匹配连续的两个双引号，如果匹配到连续的两个双引号，获取双引号中用空格分割的数字，再次匹配到两个连续的双引号后结束获取，打印获取到的数字并在前面加上“传入的原文分段：”。如果没有匹配到连续的两个双引号，打印第5步调用"api.search22()"函数的输出内容并结束程序
+7.根据第6步获取的数字，在当前目录的chapter文件夹中获取文件名为对应数字的txt文件
+8.用utf-8编码依次打开第7步获取的txt文件，连接为content字符串。把content字符串和text字符串依次传入“api.search11()”函数（顺序为api.search11(content,text)）
+9.打印第8步调用api.search11()”函数的输出内容，结束程序
+
+
+》
+```python
+import os
+import re
+import sys
+
+# 模拟api包
+class api:
+    @staticmethod
+    def search2(text):
+        return f'Output for "{text}" with some "123 456" and more "789 1011"'
+    
+    @staticmethod
+    def search22(content, text):
+        return f'Output for "{content}" and "{text}" with some "12 34" and more "56 78"'
+    
+    @staticmethod
+    def search11(content, text):
+        return f'Final output for "{content}" and "{text}"'
+
+def main():
+    # 1. 程序运行时在命令行输入内容
+    text = input("请输入内容: ")
+    
+    # 2. 导入“api”包，把输入的内容保存为text字符串并传入"api.search2()"函数
+    output_search2 = api.search2(text)
+    
+    # 3. 在第2步调用"api.search2()"函数的输出内容中匹配连续的两个双引号
+    match = re.search(r'"([^"]+)"', output_search2)
+    if match:
+        numbers = match.group(1).split()
+        print(f"传入的概括分段：{numbers}")
+    else:
+        print(output_search2)
+        return
+    
+    # 4. 根据第3步获取的数字，在当前目录的chapter2文件夹中获取文件名为对应数字的txt文件
+    content = ""
+    for number in numbers:
+        file_path = os.path.join("chapter2", f"{number}.txt")
+        if os.path.exists(file_path):
+            with open(file_path, 'r', encoding='utf-8') as file:
+                content += file.read()
+    
+    # 5. 把content字符串和text字符串依次传入“api.search22()”函数
+    output_search22 = api.search22(content, text)
+    
+    # 6. 在第5步调用“api.search22()”函数的输出内容中匹配连续的两个双引号
+    match = re.search(r'"([^"]+)"', output_search22)
+    if match:
+        numbers = match.group(1).split()
+        print(f"传入的原文分段：{numbers}")
+    else:
+        print(output_search22)
+        return
+    
+    # 7. 根据第6步获取的数字，在当前目录的chapter文件夹中获取文件名为对应数字的txt文件
+    content = ""
+    for number in numbers:
+        file_path = os.path.join("chapter", f"{number}.txt")
+        if os.path.exists(file_path):
+            with open(file_path, 'r', encoding='utf-8') as file:
+                content += file.read()
+    
+    # 8. 把content字符串和text字符串依次传入“api.search11()”函数
+    output_search11 = api.search11(content, text)
+    
+    # 9. 打印第8步调用api.search11()”函数的输出内容，结束程序
+    print(output_search11)
+
+if __name__ == "__main__":
+    main()
+```
+
+这个程序实现了你所描述的步骤。请注意，`api`类中的方法是为了模拟API的行为，实际使用时需要替换为真实的API调用。同时，确保在运行程序时，`chapter2`和`chapter`文件夹中存在相应的txt文件。

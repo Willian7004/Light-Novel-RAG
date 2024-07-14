@@ -1,0 +1,35 @@
+》》使用python编写程序实现以下步骤：
+1.当前目录下的summarize2文件夹中的txt文件使用数字命名。用utf-8编码读取当前目录下的summarize2文件夹中的txt文件并从小到大排序
+2.把第1步排序后的文件连接为1个文件，每个文件内容开头添加用带中括号的对应数字（例如 3.txt 的内容前面添加“【3】”），每个文件内容末尾添加换行。
+3.把第二步得到的文件用utf-8编码保存到当前目录，文件名为summarize2.txt
+
+》
+```python
+import os
+import re
+
+def read_and_sort_files(directory):
+    files = [f for f in os.listdir(directory) if f.endswith('.txt')]
+    files.sort(key=lambda x: int(re.search(r'\d+', x).group()))
+    contents = []
+    for file in files:
+        with open(os.path.join(directory, file), 'r', encoding='utf-8') as f:
+            content = f.read()
+            number = re.search(r'\d+', file).group()
+            contents.append(f"【{number}】{content}\n")
+    return ''.join(contents)
+
+def save_combined_file(content, output_file):
+    with open(output_file, 'w', encoding='utf-8') as f:
+        f.write(content)
+
+def main():
+    directory = 'summarize2'
+    output_file = 'summarize2.txt'
+    combined_content = read_and_sort_files(directory)
+    save_combined_file(combined_content, output_file)
+
+if __name__ == "__main__":
+    main()
+```
+

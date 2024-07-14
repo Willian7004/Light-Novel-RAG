@@ -1,0 +1,31 @@
+》》写一个python程序，实现以下功能：读取当前目录的book.txt ，读取到“------------”时进行分割，使用UTF-8编码保存到当前目录的chatper文件夹，第一个文件命名为1.txt ，每次保存文件名数字加1。
+
+》
+```python
+import os
+
+def split_and_save_chapters(file_path, delimiter, output_folder):
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    with open(file_path, 'r', encoding='utf-8') as file:
+        content = file.read()
+
+    chapters = content.split(delimiter)
+
+    for index, chapter in enumerate(chapters):
+        if chapter.strip():  # Skip empty chapters
+            output_file_path = os.path.join(output_folder, f"{index + 1}.txt")
+            with open(output_file_path, 'w', encoding='utf-8') as output_file:
+                output_file.write(chapter.strip())
+
+# Define the file path, delimiter, and output folder
+file_path = 'book.txt'
+delimiter = '------------'
+output_folder = 'chapter'
+
+# Call the function to split and save chapters
+split_and_save_chapters(file_path, delimiter, output_folder)
+```
+
+这个程序会读取当前目录下的 `book.txt` 文件，并根据指定的分隔符 `------------` 将内容分割成多个章节。每个章节会被保存到 `chapter` 文件夹中，文件名从 `1.txt` 开始，依次递增。

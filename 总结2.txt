@@ -1,0 +1,49 @@
+》》写一个python程序，实现以下步骤：
+1.使用utf-8编码读取当前目录下chapter2文件夹中的第一个txt文件
+2.导入“api”包，把读取到的文字输入“api.summarize2()”函数，如果函数报错，打印正在读取的文件的文件名并跳过第3步
+3.把“api.summarize2()”函数返回的字符用utf-8编码以相同文件名保存到当前目录的summarize2文件夹
+4.重复以上3步，完成对当前目录下chapter2文件夹中所有txt文件的读取
+
+》
+```python
+import os
+import glob
+
+def process_files(chapter_folder, summarize_folder):
+    # 确保summarize2文件夹存在
+    if not os.path.exists(summarize_folder):
+        os.makedirs(summarize_folder)
+
+    # 获取chapter2文件夹中所有的txt文件
+    txt_files = glob.glob(os.path.join(chapter_folder, '*.txt'))
+
+    for txt_file in txt_files:
+        try:
+            # 读取txt文件内容
+            with open(txt_file, 'r', encoding='utf-8') as file:
+                content = file.read()
+
+            # 使用api.summarize2()函数处理内容
+            from api import summarize2
+            summarized_content = summarize2(content)
+
+            # 获取文件名
+            file_name = os.path.basename(txt_file)
+
+            # 保存处理后的内容到summarize2文件夹
+            output_file_path = os.path.join(summarize_folder, file_name)
+            with open(output_file_path, 'w', encoding='utf-8') as output_file:
+                output_file.write(summarized_content)
+
+        except Exception as e:
+            print(f"Error processing file {txt_file}: {e}")
+
+# 定义文件夹路径
+chapter2_folder = 'chapter2'
+summarize2_folder = 'summarize2'
+
+# 处理文件
+process_files(chapter2_folder, summarize2_folder)
+```
+
+请确保`api`包中有一个名为`summarize2`的函数，并且该函数能够处理输入的字符串并返回一个摘要字符串。如果`api.summarize2()`函数抛出异常，程序会捕获异常并打印错误信息，然后跳过保存步骤。
